@@ -108,18 +108,20 @@ def spiel_loop(stdscr: "curses._CursesWindow") -> None:
             kopf_y += 1
 
         neuer_kopf = (kopf_y, kopf_x)
+        wird_wachsen = neuer_kopf == futter
 
         # Kollisionen prüfen
+        koerper_ohne_schwanz = schlange if wird_wachsen else schlange[:-1]
         if (
             kopf_y in (0, max_y - 1)
             or kopf_x in (0, max_x - 1)
-            or neuer_kopf in schlange
+            or neuer_kopf in koerper_ohne_schwanz
         ):
             break
 
         schlange.insert(0, neuer_kopf)
 
-        if neuer_kopf == futter:
+        if wird_wachsen:
             punkte += 1
             futter = platzieren_futter(max_y, max_x, schlange)
         else:
